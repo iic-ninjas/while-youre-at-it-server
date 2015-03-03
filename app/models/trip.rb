@@ -3,5 +3,7 @@ class Trip < ActiveRecord::Base
   has_many :requests
   has_one :location, through: :shopper
 
-  enum status: [:active, :not_accepting_requests, :settled]
+  enum status: [:active, :not_accepting_requests, :ended]
+
+  scope :not_ended, -> { where.not(status: Trip.statuses[:ended]) }
 end
