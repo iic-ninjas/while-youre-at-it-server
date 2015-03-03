@@ -11,6 +11,16 @@ module UserAuth
     current_user.present?
   end
 
+  def sign_in(user)
+    user.update(auth_token: SecureRandom.urlsafe_base64)
+    @_current_user = user
+  end
+
+  def sign_out
+    current_user.update(auth_token: nil)
+    @_current_user = nil
+  end
+
   private 
 
   def token_from_header
