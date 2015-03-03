@@ -1,5 +1,7 @@
 class RequestsController < ApplicationController
   before_action :ensure_no_active_requests, only: [:create]
+  before_action :ensure_can_respond, only: [:respond]
+  before_action :ensure_can_settle, only: [:settle]
 
   def create
     request = current_user.create_request(request_params)
@@ -36,6 +38,18 @@ class RequestsController < ApplicationController
   def ensure_no_active_requests
     if current_user.request.active.any?
       render 'You already have pending requests', :bad_request
+    end
+  end
+
+  def ensure_can_respond
+    if current_request.trip.shopper != current_user
+      render 'You can not respond to this request', :forbidden
+    end
+  end
+
+  def ensure_can_settle
+    if current_request.user != current_user
+      render 'You can not settle this request', :forbidden
     end
   end
 end
