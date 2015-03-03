@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   rescources :users, only: [:create, :update]
 
-  rescources :trips, only: [:create] do
+  rescources :trips, only: [:create, :index] do
     put ':trip_id/stop_accepting_request', to: :stop_accepting_request
     put ':trip_id/end', to: :end_trip
   end

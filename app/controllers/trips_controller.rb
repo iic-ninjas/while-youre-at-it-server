@@ -7,6 +7,10 @@ class TripsController < ApplicationController
     render json: @trip
   end
 
+  def index
+    render json: Trip.active.all # needs loaction based filter
+  end
+
   def stop_accepting_requests
     current_trip.not_accepting_requests!
     render json: current_trip
