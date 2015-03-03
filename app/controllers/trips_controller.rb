@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_action :ensure_no_active_trip, only: [:create]
-  before_action :ensure_active_trip, only: [:stop_accepting_requests, :finish_trip]
+  before_action :ensure_active_trip, only: [:stop_accepting_requests, :end_trip]
 
   def create
     @trip = current_user.create_trip
@@ -12,7 +12,7 @@ class TripsController < ApplicationController
     render json: current_trip
   end
 
-  def finish_trip
+  def end_trip
     current_trip.ended!
     render json: current_trip
   end
