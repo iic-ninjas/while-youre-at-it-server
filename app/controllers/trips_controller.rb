@@ -8,18 +8,20 @@ class TripsController < ApplicationController
   end
 
   def stop_accepting_requests
-    @trip = current_user.trips.active.first
-    @trip.not_accepting_requests!
-    render json: @trip
+    current_trip.not_accepting_requests!
+    render json: current_trip
   end
 
   def finish_trip
-    @trip = current_user.trips.active.first
-    @trip.ended!
-    render json: @trip
+    current_trip.ended!
+    render json: current_trip
   end
 
   private
+
+  def current_trip
+    @_trip ||= current_user.trips.find(params.require(:trip_id))
+  end
 
   def ensure_no_active_trip
     if current_user.trips.not_ended.any?
@@ -28,8 +30,8 @@ class TripsController < ApplicationController
   end
 
   def ensure_active_trip
-    if current_user.trips.not_ended.empty?
-      render_error 'You do not have any active trips', :bad_request
+    if current_trip.ended?
+      render_error 'This trip has already ended', :bad_request
     end
   end
 end
