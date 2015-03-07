@@ -1,23 +1,34 @@
 class RequestsController < ApplicationController
-  before_action :ensure_no_active_requests, only: [:create]
+  before_action :ensure_idle, only: [:create]
   before_action :ensure_can_respond, only: [:respond]
-  before_action :ensure_can_settle, only: [:settle]
+  before_action :ensure_can_change_status, only: [:destroy, :settle]
 
   def create
     request = current_user.create_request(request_params)
+    current_user.requesting!
     render json: request
   end
 
+  def destroy
+    current_user.requests.last.canceled!
+    current_user.idle!
+    render json: current_user
+  end
+
   def respond
-    case response.to_sym
-      when :accept then current_request.accepted!
-      when :decline then current_request.declined!
+    case given_response
+      when :accept
+        current_request.accepted!
+      when :decline
+        current_request.declined!
+        current_user.idle!
     end
     render json: current_request
   end
 
   def settle
     current_request.settled!
+    current_user.idle!
     render json: current_request
   end
 
@@ -31,13 +42,13 @@ class RequestsController < ApplicationController
     params.require(:requets).permit(:trip_id, :items, :price)
   end
 
-  def response
-    params.require(:response)
+  def given_response
+    params.require(:response).to_sym
   end
 
-  def ensure_no_active_requests
-    if current_user.request.active.any?
-      render 'You already have pending requests', :bad_request
+  def ensure_idle
+    unless current_user.idle?
+      render 'You can not request now', :bad_request
     end
   end
 
@@ -47,9 +58,9 @@ class RequestsController < ApplicationController
     end
   end
 
-  def ensure_can_settle
+  def ensure_can_change_status
     if current_request.user != current_user
-      render 'You can not settle this request', :forbidden
+      render 'You can not change the status of this request', :forbidden
     end
   end
 end

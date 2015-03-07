@@ -1,41 +1,26 @@
 class TripsController < ApplicationController
-  before_action :ensure_no_active_trip, only: [:create]
-  before_action :ensure_active_trip, only: [:stop_accepting_requests, :end_trip]
+  before_action :ensure_idle, only: [:create]
 
   def create
-    @trip = current_user.create_trip
-    render json: @trip
+    trip = current_user.create_trip
+    current_user.tripping!
+    render json: trip
   end
 
   def index
     render json: Trip.active.all # needs loaction based filter
   end
 
-  def stop_accepting_requests
-    current_trip.not_accepting_requests!
-    render json: current_trip
-  end
-
   def end_trip
-    current_trip.ended!
-    render json: current_trip
+    current_user.idle!
+    render json: current_user
   end
 
   private
 
-  def current_trip
-    @_trip ||= current_user.trips.find(params.require(:trip_id))
-  end
-
-  def ensure_no_active_trip
-    if current_user.trips.not_ended.any?
-      render_error 'You are already on a trip', :bad_request 
-    end
-  end
-
-  def ensure_active_trip
-    if current_trip.ended?
-      render_error 'This trip has already ended', :bad_request
+  def ensure_idle
+    unless current_user.idle?
+      render_error 'You can not start a trip now', :bad_request 
     end
   end
 end

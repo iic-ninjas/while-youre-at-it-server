@@ -4,4 +4,6 @@ class User < ActiveRecord::Base
   has_many :requests
 
   accepts_nested_attributes_for :location
+
+  enum state: [:idle, :tripping, :requesting]
 end
