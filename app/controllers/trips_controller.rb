@@ -4,16 +4,17 @@ class TripsController < ApplicationController
   def create
     trip = current_user.create_trip
     current_user.tripping!
-    render json: trip
+    render_success
   end
 
   def index
-    render json: Trip.active.all # needs loaction based filter
+    users = User.tripping # needs location filter
+    render json: users
   end
 
   def end_trip
     current_user.idle!
-    render json: current_user
+    render_success
   end
 
   private

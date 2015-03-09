@@ -1,7 +1,7 @@
 class RequestsController < ApplicationController
   before_action :ensure_idle, only: [:create]
-  before_action :ensure_can_respond, only: [:respond]
-  before_action :ensure_can_change_status, only: [:destroy, :settle]
+  before_action :ensure_can_respond, only: [:accept, :decline]
+  before_action :ensure_owner, only: [:cancel, :settle]
 
   def create
     request = current_user.create_request(request_params)
@@ -9,27 +9,32 @@ class RequestsController < ApplicationController
     render json: request
   end
 
-  def destroy
-    current_user.requests.last.canceled!
-    current_user.idle!
-    render json: current_user
+  def index
+    requests = current_user.active_trip.requests
+    render json: requests, each_serializer: IncomingRequestSerializer
   end
 
-  def respond
-    case given_response
-      when :accept
-        current_request.accepted!
-      when :decline
-        current_request.declined!
-        current_user.idle!
-    end
-    render json: current_request
+  def accept
+    current_request.accepted!
+    render_success
+  end
+
+  def decline
+    current_request.declined!
+    current_user.idle!
+    render_success
+  end
+
+  def cancel
+    current_user.active_request.canceled!
+    current_user.idle!
+    render_success
   end
 
   def settle
-    current_request.settled!
+    current_user.active_request.settled!
     current_user.idle!
-    render json: current_request
+    render_success
   end
 
   private
@@ -39,28 +44,30 @@ class RequestsController < ApplicationController
   end
 
   def request_params
-    params.require(:requets).permit(:trip_id, :items, :price)
-  end
-
-  def given_response
-    params.require(:response).to_sym
+    params.permit(:trip_id, :items, :price)
   end
 
   def ensure_idle
     unless current_user.idle?
-      render 'You can not request now', :bad_request
+      render_error 'You can not request now', :bad_request
+    end
+  end
+
+  def ensure_tripping
+    unless current_user.tripping?
+      render_error 'You are not on a trip right now', :bad_request
     end
   end
 
   def ensure_can_respond
     if current_request.trip.shopper != current_user
-      render 'You can not respond to this request', :forbidden
+      render_error 'You can not respond to this request', :forbidden
     end
   end
 
-  def ensure_can_change_status
+  def ensure_owner
     if current_request.user != current_user
-      render 'You can not change the status of this request', :forbidden
+      render_error 'You can not change the status of this request', :forbidden
     end
   end
 end
