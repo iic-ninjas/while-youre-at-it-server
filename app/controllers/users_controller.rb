@@ -7,7 +7,6 @@ class UsersController < ApplicationController
     else
       @user = User.create(user_params)
     end
-    sign_in(@user)
     render json: @user
   end
 
