@@ -1,13 +1,20 @@
 Rails.application.routes.draw do
-  resources :users, only: [:create, :update]
-
-  resources :trips, only: [:create, :index] do
-    post 'end', to: :end_trip
+  scope '/users', controller: :users do
+    post '/login', to: :login
+    post '/update', to: :update
   end
 
-  resources :requests, only: [:create] do
-    post 'cancel', to: :cancel
-    post 'settle', to: :settle
+  scope '/trips', controller: :trips do
+    get '/', to: :index
+    post '/create', to: :create
+    post '/end', to: :end_trip
+  end
+
+  scope '/requests', controller: :shop_requests do
+    get '/', to: :index
+    post '/create', to: :create
+    post '/cancel', to: :cancel
+    post '/settle', to: :settle
     post ':request_id/accept', to: :accept
     post ':request_id/decline', to: :decline
   end

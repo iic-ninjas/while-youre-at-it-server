@@ -1,4 +1,4 @@
-module ErrorRendering
+module RenderingHelper
   extend ActiveSupport::Concern
 
   def render_success

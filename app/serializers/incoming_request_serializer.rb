@@ -1,7 +1,7 @@
-class IncomingRequestSerializer < ActiveModel::IncomingRequestSerializer
-  attributes :requester, :status, :items, :offer
+class IncomingRequestSerializer < ActiveModel::Serializer
+  attributes :id, :requester, :status, :items, :offer
 
   def requester
-    object.user
+    ContactSerializer.new(object.user, root: false)
   end
 end

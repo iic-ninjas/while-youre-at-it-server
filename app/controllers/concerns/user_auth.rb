@@ -4,7 +4,7 @@ module UserAuth
   AUTH_HEADER_PARAM = 'X-WYAI-FBID'
 
   def current_user
-    @_current_user ||= User.find_by(auth_token: fbid_from_header)
+    @_current_user ||= User.find_by(facebook_id: fbid_from_header)
   end
 
   def user_signed_in?

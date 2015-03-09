@@ -2,14 +2,14 @@ class TripsController < ApplicationController
   before_action :ensure_idle, only: [:create]
 
   def create
-    trip = current_user.create_trip
+    trip = current_user.trips.create
     current_user.tripping!
     render_success
   end
 
   def index
     users = User.tripping # needs location filter
-    render json: users
+    render json: users, each_serializer: ContactSerializer
   end
 
   def end_trip

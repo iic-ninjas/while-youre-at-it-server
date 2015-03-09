@@ -1,16 +1,17 @@
-class RequestsController < ApplicationController
+class ShopRequestsController < ApplicationController
   before_action :ensure_idle, only: [:create]
   before_action :ensure_can_respond, only: [:accept, :decline]
   before_action :ensure_owner, only: [:cancel, :settle]
 
   def create
-    request = current_user.create_request(request_params)
+    trip = User.find_by(facebook_id: params.require(:shopper_id)).active_trip
+    request = current_user.shop_requests.create(request_params.merge(trip: trip))
     current_user.requesting!
     render json: request
   end
 
   def index
-    requests = current_user.active_trip.requests
+    requests = current_user.active_trip.shop_requests
     render json: requests, each_serializer: IncomingRequestSerializer
   end
 
@@ -40,11 +41,11 @@ class RequestsController < ApplicationController
   private
 
   def current_request
-    @_request ||= Request.find(params.require(:request_id))
+    @_shop_request ||= ShopRequest.find(params.require(:request_id))
   end
 
   def request_params
-    params.permit(:trip_id, :items, :price)
+    params.permit(:offer, items: [])
   end
 
   def ensure_idle
