@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    permitted_params = params.require(:user).permit(:facebook_id, :name, :phone_number, :paypal_account)
+    permitted_params = params.require(:user).permit(:facebook_id, :first_name, :last_name, :phone_number, :paypal_account)
     permitted_params[:location_attributes] = params.require(:user).require(:location).permit(:street_address, :city, :country)
     permitted_params
   end
