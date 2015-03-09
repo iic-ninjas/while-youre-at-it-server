@@ -11,20 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150309131726) do
+ActiveRecord::Schema.define(version: 20150309132528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "locations", force: true do |t|
-    t.string   "street_address"
-    t.string   "city"
-    t.decimal  "longitude",      precision: 10, scale: 6
-    t.decimal  "latitude",       precision: 10, scale: 6
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "requests", force: true do |t|
     t.integer  "user_id",                null: false
@@ -43,13 +33,17 @@ ActiveRecord::Schema.define(version: 20150309131726) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "facebook_id",              null: false
+    t.string   "facebook_id",                                         null: false
     t.string   "phone_number"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "state",        default: 0, null: false
-    t.string   "first_name",               null: false
-    t.string   "last_name",                null: false
+    t.integer  "state",                                   default: 0, null: false
+    t.string   "first_name",                                          null: false
+    t.string   "last_name",                                           null: false
+    t.string   "street_address"
+    t.string   "city"
+    t.decimal  "latitude",       precision: 10, scale: 6
+    t.decimal  "longitude",      precision: 10, scale: 6
   end
 
   add_index "users", ["facebook_id"], name: "index_users_on_facebook_id", unique: true, using: :btree
