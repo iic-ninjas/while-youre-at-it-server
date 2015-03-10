@@ -14,10 +14,17 @@ class UsersController < ApplicationController
   end
 
   def state
+    if current_user.active_trip
+      outgoing_requests = current_user.active_trip.shop_requests.map do |shop_request|
+        OutgoingRequestSerializer.new(shop_request)
+      end
+    else
+      outgoing_requests = null
+    end
     render json: {
       state: current_user.state, 
-      request: current_user.active_request, 
-      trip: current_user.active_trip
+      active_trip: outgoing_requests
+      active_request: current_user.active_request 
     }
   end
 
