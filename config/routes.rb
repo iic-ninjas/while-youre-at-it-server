@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   scope '/trips', controller: :trips do
     get '/', to: :index
-    post '/create', to: :create
+    post '/start', to: :create
     post '/end', to: :end_trip
   end
 

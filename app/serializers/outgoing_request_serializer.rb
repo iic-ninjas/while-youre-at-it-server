@@ -1,5 +1,5 @@
 class OutgoingRequestSerializer < ActiveModel::Serializer
-  attributes :shopper, :status, :items, :offer
+  attributes :id, :shopper, :status, :items, :offer
 
   def shopper
     ContactSerializer.new(object.trip.shopper, root: false)
