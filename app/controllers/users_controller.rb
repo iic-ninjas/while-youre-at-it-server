@@ -13,6 +13,14 @@ class UsersController < ApplicationController
     render json: @user
   end
 
+  def state
+    render json: {
+      state: current_user.state, 
+      request: current_user.active_request, 
+      trip: current_user.active_trip
+    }
+  end
+
   private
 
   def user_params

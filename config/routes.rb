@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   scope '/users', controller: :users do
+    get '/state', to: :state
     post '/login', to: :login
     post '/update', to: :update
   end
