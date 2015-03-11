@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     end
     render json: {
       state: current_user.state, 
-      active_trip: outgoing_requests
+      active_trip: outgoing_requests,
       active_request: current_user.active_request 
     }
   end
