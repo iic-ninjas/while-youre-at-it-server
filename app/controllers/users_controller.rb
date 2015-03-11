@@ -19,7 +19,7 @@ class UsersController < ApplicationController
         OutgoingRequestSerializer.new(shop_request)
       end
     else
-      outgoing_requests = null
+      outgoing_requests = nil
     end
     render json: {
       state: current_user.state, 
