@@ -3,14 +3,14 @@ class UsersController < ApplicationController
 
   def login
     unless @user = User.find_by(facebook_id: user_params[:facebook_id])
-      @user = User.create(user_params)
+      @user = User.create!(user_params)
     end
     render json: @user
   end
 
   def update
-    @user = current_user.update(user_params)
-    render json: @user
+    current_user.update!(user_params)
+    render json: current_user
   end
 
   def state
