@@ -22,7 +22,9 @@ Once you've updated the `ruby-build` plugin then all you need to do is run: `rbe
 3. run `bundle install --binstubs .bundle/bin`
 4. run `rbenv rehash`
 
-
+## Configure environment variables
+1. Install the [rbenv-vars plugin](https://github.com/sstephenson/rbenv-vars).
+2. In the project root folder create a `.rbenv-vars` and add the necessary environment variables.
 
 
 
