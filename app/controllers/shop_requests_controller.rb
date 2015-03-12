@@ -12,7 +12,7 @@ class ShopRequestsController < ApplicationController
 
   def index
     requests = current_user.active_trip.shop_requests
-    render json: requests, each_serializer: IncomingRequestSerializer
+    render json: requests, each_serializer: IncomingRequestSerializer, root: false
   end
 
   def accept

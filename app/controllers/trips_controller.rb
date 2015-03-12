@@ -9,7 +9,7 @@ class TripsController < ApplicationController
 
   def index
     users = User.tripping # needs location filter
-    render json: users, each_serializer: ContactSerializer
+    render json: users, each_serializer: ContactSerializer, root: false
   end
 
   def end_trip
