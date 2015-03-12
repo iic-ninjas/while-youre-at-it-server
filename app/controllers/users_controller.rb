@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     render json: {
       state: current_user.state, 
       active_trip: incoming_requests,
-      active_request: current_user.active_request 
+      active_request: OutgoingRequestSerializer.new(current_user.active_request)
     }
   end
 
