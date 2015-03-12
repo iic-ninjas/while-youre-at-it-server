@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     post '/create', to: :create
     post '/cancel', to: :cancel
     post '/settle', to: :settle
-    post ':request_id/accept', to: :accept
-    post ':request_id/decline', to: :decline
+    post '/accept', to: :accept
+    post '/decline', to: :decline
   end
 end
