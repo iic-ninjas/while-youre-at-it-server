@@ -22,6 +22,7 @@ class ShopRequestsController < ApplicationController
 
   def decline
     current_request.declined!
+    current_request.user.idle!
     render_success
   end
 
