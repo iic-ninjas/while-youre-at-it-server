@@ -9,4 +9,4 @@ gem 'rails_12factor'
 gem 'active_model_serializers'
 
 gem 'spring', group: :development
-
+gem 'gcm'
