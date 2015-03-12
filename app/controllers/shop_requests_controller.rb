@@ -7,7 +7,7 @@ class ShopRequestsController < ApplicationController
     trip = User.find_by(facebook_id: params.require(:shopper_id)).active_trip
     request = current_user.shop_requests.create(request_params.merge(trip: trip))
     current_user.requesting!
-    render json: request
+    render json: request, serializer: OutgoingRequestSerializer
   end
 
   def index
