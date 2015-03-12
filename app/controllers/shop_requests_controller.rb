@@ -1,5 +1,6 @@
 class ShopRequestsController < ApplicationController
   before_action :ensure_idle, only: [:create]
+  before_action :ensure_tripping, only: [:index]
   before_action :ensure_can_respond, only: [:accept, :decline]
   before_action :ensure_owner, only: [:cancel, :settle]
 
