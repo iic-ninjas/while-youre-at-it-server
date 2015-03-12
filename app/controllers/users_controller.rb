@@ -2,7 +2,8 @@ class UsersController < ApplicationController
   skip_before_action :require_user, only: [:login]
 
   def login
-    unless @user = User.find_by(facebook_id: user_params[:facebook_id])
+    @user = User.find_by(facebook_id: user_params[:facebook_id])
+    if @user.nil?
       @user = User.create!(user_params)
     end
     render json: @user
