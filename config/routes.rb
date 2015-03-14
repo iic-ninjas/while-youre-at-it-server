@@ -19,4 +19,6 @@ Rails.application.routes.draw do
     post ':request_id/accept', to: :accept
     post ':request_id/decline', to: :decline
   end
+
+  resources :devices, only: [:create], defaults: {format: :json}
 end
