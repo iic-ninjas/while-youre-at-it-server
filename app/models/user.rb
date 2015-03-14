@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :trips, foreign_key: 'shopper_id'
   has_many :shop_requests
+  has_many :devices
 
   enum state: [:idle, :tripping, :requesting]
 
