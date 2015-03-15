@@ -10,3 +10,4 @@ gem 'active_model_serializers'
 
 gem 'spring', group: :development
 gem 'gcm'
+gem 'byebug', group: [:development, :test]
