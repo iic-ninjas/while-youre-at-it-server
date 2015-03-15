@@ -1,7 +1,7 @@
 class ShopRequestsController < ApplicationController
   before_action :ensure_idle, only: [:create]
+  before_action :ensure_tripping, only: [:index]
   before_action :ensure_can_respond, only: [:accept, :decline]
-  before_action :ensure_owner, only: [:cancel, :settle]
 
   def create
     trip = User.find_by(facebook_id: params.require(:shopper_id)).active_trip
@@ -9,12 +9,12 @@ class ShopRequestsController < ApplicationController
     current_user.requesting!
 
     NotificationsService.notify_shopper_on_request(request)
-    render json: request
+    render json: request, serializer: OutgoingRequestSerializer
   end
 
   def index
     requests = current_user.active_trip.shop_requests
-    render json: requests, each_serializer: IncomingRequestSerializer
+    render json: requests, each_serializer: IncomingRequestSerializer, root: false
   end
 
   def accept
@@ -65,12 +65,6 @@ class ShopRequestsController < ApplicationController
   def ensure_can_respond
     if current_request.trip.shopper != current_user
       render_error 'You can not respond to this request', :forbidden
-    end
-  end
-
-  def ensure_owner
-    if current_request.user != current_user
-      render_error 'You can not change the status of this request', :forbidden
     end
   end
 end

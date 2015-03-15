@@ -2,7 +2,8 @@ class UsersController < ApplicationController
   skip_before_action :require_user, only: [:login]
 
   def login
-    unless @user = User.find_by(facebook_id: user_params[:facebook_id])
+    @user = User.find_by(facebook_id: user_params[:facebook_id])
+    if @user.nil?
       @user = User.create!(user_params)
     end
     render json: @user
@@ -15,16 +16,16 @@ class UsersController < ApplicationController
 
   def state
     if current_user.active_trip
-      outgoing_requests = current_user.active_trip.shop_requests.map do |shop_request|
-        OutgoingRequestSerializer.new(shop_request)
+      incoming_requests = current_user.active_trip.shop_requests.map do |shop_request|
+        IncomingRequestSerializer.new(shop_request)
       end
     else
-      outgoing_requests = nil
+      incoming_requests = nil
     end
     render json: {
       state: current_user.state, 
-      active_trip: outgoing_requests,
-      active_request: current_user.active_request 
+      active_trip: incoming_requests,
+      active_request: OutgoingRequestSerializer.new(current_user.active_request)
     }
   end
 
