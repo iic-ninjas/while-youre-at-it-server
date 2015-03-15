@@ -2,8 +2,8 @@ class NotificationsService
 
   @@gcm = GCM.new(ENV['GOOGLE_API_KEY'])
 
-  def notify_request_created(request)
-    request.trip.shopper
+  def notify_shopper_on_request(request)
+    @@gcm.send_with_notification_key(request.trip.shopper.notification_key, data: IncomingRequestSerializer.new(request).as_json)
   end
 
   def self.register_user(user)
