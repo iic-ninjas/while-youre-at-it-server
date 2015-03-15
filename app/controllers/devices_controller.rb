@@ -1,8 +1,9 @@
 class DevicesController < ApplicationController
 
   def create
-    device = current_user.devices.find_or_create_by!(device_params)
-    NotificationsService.register_user(current_user)
+    created_device = false
+    device = current_user.devices.find_or_create_by!(device_params) { created_device = true }
+    NotificationsService.register_user(current_user) if created_device
 
     respond_to do |format|
       format.json { render json: device }

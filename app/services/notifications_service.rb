@@ -14,6 +14,7 @@ class NotificationsService
     response = @@gcm.create(user.facebook_id, project_id, registration_ids)
     if response[:response] == 'success'
       notification_key = JSON.parse(response[:body])['notification_key']
+      user.update!(notification_key: notification_key)
     else
       error = JSON.parse(response[:body])['error']
       raise StandardError.new('Could not register user for notifications: ' + error)
