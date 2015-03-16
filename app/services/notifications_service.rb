@@ -3,7 +3,7 @@ class NotificationsService
   @@gcm = GCM.new(ENV['GOOGLE_API_KEY'])
 
   def self.notify_shopper_on_request(request)
-    response = @@gcm.send_with_notification_key(request.trip.shopper.notification_key, data: IncomingRequestSerializer.new(request).as_json)
+    response = @@gcm.send_with_notification_key(request.trip.shopper.notification_key, data: NotificationSerializer.new(request).as_json)
     if response[:response] == 'success'
       Rails.logger.debug "Successfully sent notification on request with id: #{request.id}"
     else

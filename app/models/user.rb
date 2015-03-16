@@ -14,4 +14,8 @@ class User < ActiveRecord::Base
     return nil unless self.requesting?
     self.shop_requests.last
   end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
 end
