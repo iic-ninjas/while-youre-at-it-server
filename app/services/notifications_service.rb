@@ -11,7 +11,9 @@ class NotificationsService
     return if registration_ids.blank?
 
     project_id = ENV['GOOGLE_PROJECT_ID']
-    response = @@gcm.create(user.facebook_id, project_id, registration_ids)
+    user.update!(notification_key_name: "shopingo_#{user.facebook_id}_#{DateTime.current.to_i}")
+
+    response = @@gcm.create(user.notification_key_name, project_id, registration_ids)
     if response[:response] == 'success'
       notification_key = JSON.parse(response[:body])['notification_key']
       user.update!(notification_key: notification_key)
