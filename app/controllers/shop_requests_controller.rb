@@ -19,14 +19,14 @@ class ShopRequestsController < ApplicationController
 
   def accept
     current_request.accepted!
-    NotificationsService.notify_requester_on_request(request)
+    NotificationsService.notify_requester_on_request(current_request)
     render_success
   end
 
   def decline
     current_request.declined!
     current_request.user.idle!
-    NotificationsService.notify_requester_on_request(request)
+    NotificationsService.notify_requester_on_request(current_request)
     render_success
   end
 
