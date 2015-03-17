@@ -11,6 +11,15 @@ class NotificationsService
     end
   end
 
+  def self.notify_requester_on_request(request)
+    response = @@gcm.send_with_notification_key(request.user, data: NotificationSerializer.new(request).as_json)
+    if response[:response] == 'success'
+      Rails.logger.debug "Successfully sent notification on request with id: #{request.id}"
+    else
+      Rails.logger.warn "Failed to send notification on request with id: #{request.id}"
+    end
+  end
+
   def self.register_user(user)
     registration_ids = user.devices.to_a.map(&:registration_id)
     return if registration_ids.blank?

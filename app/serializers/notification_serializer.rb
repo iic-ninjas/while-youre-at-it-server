@@ -6,6 +6,12 @@ class NotificationSerializer < ActiveModel::Serializer
   def message
     if object.pending?
       "Hey, #{object.user.full_name} sent you a shopping request!"
+    elsif object.accepted?
+      "#{object.trip.shopper.full_name} accepted your request!"
+    elsif object.declined?
+      "#{object.trip.shopper.full_name} declined your request"
+    else
+      nil
     end
   end
 
