@@ -31,14 +31,18 @@ class ShopRequestsController < ApplicationController
   end
 
   def cancel
-    current_user.active_request.canceled!
+    request = current_user.active_request # need to save it as variable before cancelling it for notification
+    request.canceled!
     current_user.idle!
+    NotificationsService.notify_shopper_on_request(request)
     render_success
   end
 
   def settle
-    current_user.active_request.settled!
+    request = current_user.active_request # need to save it as variable before cancelling it for notification
+    request.settled!
     current_user.idle!
+    NotificationsService.notify_shopper_on_request(request)
     render_success
   end
 
