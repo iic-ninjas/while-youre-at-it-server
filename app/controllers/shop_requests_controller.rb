@@ -7,6 +7,8 @@ class ShopRequestsController < ApplicationController
     trip = User.find_by(facebook_id: params.require(:shopper_id)).active_trip
     request = current_user.shop_requests.create(request_params.merge(trip: trip))
     current_user.requesting!
+
+    NotificationsService.notify_shopper_on_request(request)
     render json: request, serializer: OutgoingRequestSerializer
   end
 
@@ -17,24 +19,30 @@ class ShopRequestsController < ApplicationController
 
   def accept
     current_request.accepted!
+    NotificationsService.notify_requester_on_request(current_request)
     render_success
   end
 
   def decline
     current_request.declined!
     current_request.user.idle!
+    NotificationsService.notify_requester_on_request(current_request)
     render_success
   end
 
   def cancel
-    current_user.active_request.canceled!
+    request = current_user.active_request # need to save it as variable before cancelling it for notification
+    request.canceled!
     current_user.idle!
+    NotificationsService.notify_shopper_on_request(request)
     render_success
   end
 
   def settle
-    current_user.active_request.settled!
+    request = current_user.active_request # need to save it as variable before cancelling it for notification
+    request.settled!
     current_user.idle!
+    NotificationsService.notify_shopper_on_request(request)
     render_success
   end
 

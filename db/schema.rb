@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150309151931) do
+ActiveRecord::Schema.define(version: 20150316155938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "devices", force: true do |t|
+    t.string   "registration_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "devices", ["user_id"], name: "index_devices_on_user_id", using: :btree
 
   create_table "shop_requests", force: true do |t|
     t.integer  "user_id",                null: false
@@ -33,17 +42,19 @@ ActiveRecord::Schema.define(version: 20150309151931) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "facebook_id",                                         null: false
+    t.string   "facebook_id",                                                null: false
     t.string   "phone_number"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "state",                                   default: 0, null: false
-    t.string   "first_name",                                          null: false
-    t.string   "last_name",                                           null: false
+    t.integer  "state",                                          default: 0, null: false
+    t.string   "first_name",                                                 null: false
+    t.string   "last_name",                                                  null: false
     t.string   "street_address"
     t.string   "city"
-    t.decimal  "latitude",       precision: 10, scale: 6
-    t.decimal  "longitude",      precision: 10, scale: 6
+    t.decimal  "latitude",              precision: 10, scale: 6
+    t.decimal  "longitude",             precision: 10, scale: 6
+    t.string   "notification_key"
+    t.string   "notification_key_name"
   end
 
   add_index "users", ["facebook_id"], name: "index_users_on_facebook_id", unique: true, using: :btree

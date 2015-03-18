@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :trips, foreign_key: 'shopper_id'
   has_many :shop_requests
+  has_many :devices
 
   enum state: [:idle, :tripping, :requesting]
 
@@ -12,5 +13,9 @@ class User < ActiveRecord::Base
   def active_request
     return nil unless self.requesting?
     self.shop_requests.last
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
   end
 end
