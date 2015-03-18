@@ -4,6 +4,7 @@ class TripsController < ApplicationController
   def create
     trip = current_user.trips.create
     current_user.tripping!
+    NotificationsService.notify_users_on_trip(trip)
     render_success
   end
 
@@ -14,6 +15,7 @@ class TripsController < ApplicationController
 
   def end_trip
     current_user.idle!
+    NotificationsService.notify_users_on_trip(current_user.trips.last)
     render_success
   end
 
