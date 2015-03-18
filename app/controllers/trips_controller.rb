@@ -14,6 +14,10 @@ class TripsController < ApplicationController
   end
 
   def end_trip
+    current_user.active_trip.shop_requests.pending.each do |request|
+      request.declined!
+      request.user.idle!
+    end
     current_user.idle!
     NotificationsService.notify_users_on_trip(current_user.trips.last)
     render_success
