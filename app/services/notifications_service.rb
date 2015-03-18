@@ -6,9 +6,10 @@ class NotificationsService
     users = []
     if trip.shopper.tripping?
       users = User.idle.where.not(notification_key: nil)
-    elsif trip.shopper.idle?
+    else
       # meaning trip was cancelled
-      users = trip.shop_requests.map(&:user)
+      # no need to do anything as all the requests will be declined
+      return
     end
 
     Rails.logger.debug "Sending notification to #{users.length} users"

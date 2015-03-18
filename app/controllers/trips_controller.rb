@@ -14,12 +14,13 @@ class TripsController < ApplicationController
   end
 
   def end_trip
-    current_user.active_trip.shop_requests.pending.each do |request|
+    current_user.active_trip.shop_requests.can_be_declined.each do |request|
       request.declined!
       request.user.idle!
+      Rails.logger.debug("Sending declined request notification to #{request.user.full_name}...")
+      NotificationsService.notify_requester_on_request(request)
     end
     current_user.idle!
-    NotificationsService.notify_users_on_trip(current_user.trips.last)
     render_success
   end
 
