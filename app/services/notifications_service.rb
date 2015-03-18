@@ -3,10 +3,17 @@ class NotificationsService
   @@gcm = GCM.new(ENV['GOOGLE_API_KEY'])
 
   def self.notify_users_on_trip(trip)
-    potential_requesters = User.where('state <> ? AND notification_key IS NOT NULL', User.states[:tripping])
-    Rails.logger.debug "Sending notification to #{potential_requesters.length} users"
-    potential_requesters.to_a.each do |requester|
-      response = @@gcm.send_with_notification_key(requester.notification_key, data: TripSerializer.new(trip).as_json, collapse_key: "trip_#{trip.id}")
+    users = []
+    if trip.shopper.tripping?
+      users = User.idle.where.not(notification_key: nil)
+    elsif trip.shopper.idle?
+      # meaning trip was cancelled
+      # TODO: complete this
+    end
+
+    Rails.logger.debug "Sending notification to #{users.length} users"
+    users.each do |requester|
+      response = @@gcm.send_with_notification_key(requester.notification_key, data: TripNotificationSerializer.new(trip).as_json, collapse_key: "trip_#{trip.id}")
       if response[:response] == 'success'
         Rails.logger.debug "Successfully sent notification to requester id #{requester.id} on trip with id: #{trip.id}"
       else

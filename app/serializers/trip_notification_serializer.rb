@@ -1,9 +1,11 @@
 class TripNotificationSerializer < ActiveModel::Serializer
-  attributes :notification_type, :message, :payload
+  attributes :notification_type
+  attributes :message
+  attributes :payload
 
   def message
-    if object.status == 'active'
-      "Your friend #{object.shopper.full_name} is going shopping and willing to take requests"
+    if object.shopper.tripping?
+      "Your friend #{object.shopper.full_name} is going shopping and willing to take requests."
     else
       "#{object.shopper.full_name} decided to cancel his shopping trip :("
     end
