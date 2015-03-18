@@ -1,8 +1,7 @@
 class DevicesController < ApplicationController
 
   def create
-    created_device = false
-    device = current_user.devices.find_or_create_by!(device_params) { created_device = true }
+    device = current_user.devices.find_or_create_by!(device_params)
     NotificationsService.register_user(current_user) if current_user.notification_key.blank?
 
     respond_to do |format|
