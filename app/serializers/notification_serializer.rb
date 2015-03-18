@@ -20,7 +20,7 @@ class NotificationSerializer < ActiveModel::Serializer
   end
 
   def notification_type
-    'incoming_request_notification'
+    'shop_request_notification'
   end
 
 end
