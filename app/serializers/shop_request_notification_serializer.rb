@@ -1,4 +1,4 @@
-class NotificationSerializer < ActiveModel::Serializer
+class ShopRequestNotificationSerializer < ActiveModel::Serializer
   attributes :payload
   attributes :message
   attributes :notification_type

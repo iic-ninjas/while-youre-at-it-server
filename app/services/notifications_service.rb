@@ -23,7 +23,7 @@ class NotificationsService
   end
 
   def self.notify_shopper_on_request(request)
-    response = @@gcm.send_with_notification_key(request.trip.shopper.notification_key, data: NotificationSerializer.new(request).as_json)
+    response = @@gcm.send_with_notification_key(request.trip.shopper.notification_key, data: ShopRequestNotificationSerializer.new(request).as_json)
     if response[:response] == 'success'
       Rails.logger.debug "Successfully sent notification on request with id: #{request.id}"
     else
@@ -32,7 +32,7 @@ class NotificationsService
   end
 
   def self.notify_requester_on_request(request)
-    response = @@gcm.send_with_notification_key(request.user.notification_key, data: NotificationSerializer.new(request).as_json)
+    response = @@gcm.send_with_notification_key(request.user.notification_key, data: ShopRequestNotificationSerializer.new(request).as_json)
     if response[:response] == 'success'
       Rails.logger.debug "Successfully sent notification on request with id: #{request.id}"
     else
